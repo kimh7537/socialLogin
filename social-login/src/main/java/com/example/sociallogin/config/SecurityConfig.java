@@ -49,6 +49,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/").permitAll()
                         .requestMatchers("my").hasRole(Role.USER.name())
+                        .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated());
         http
                 .logout((auth) -> auth
