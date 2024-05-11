@@ -85,7 +85,7 @@ public class ReissueController {
     }
 
     private void addRefreshEntity(String uniqueId, String refresh, Long expiredMs) {
-
+        //증복 저장x 구현해야함
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
         RefreshEntity refreshEntity = new RefreshEntity();

@@ -48,6 +48,7 @@ public class JWTFilter extends OncePerRequestFilter {
             jwtUtil.isExpired(token);
         } catch (ExpiredJwtException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            filterChain.doFilter(request, response);
             return;
         }
 
@@ -55,6 +56,7 @@ public class JWTFilter extends OncePerRequestFilter {
         String category = jwtUtil.getCategory(token);
         if (!category.equals("access")) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            filterChain.doFilter(request, response);
             return;
         }
 

@@ -54,6 +54,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private void addRefreshEntity(String uniqueId, String refresh, Long expiredMs) {
 
+        //중복 저장 x 구현해야함
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
         RefreshEntity refreshEntity = new RefreshEntity();
