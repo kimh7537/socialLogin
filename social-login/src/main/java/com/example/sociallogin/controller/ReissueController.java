@@ -7,6 +7,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import java.util.Date;
 
 @Controller
 @ResponseBody
+@Slf4j
 public class ReissueController {
 
     private final JWTUtil jwtUtil;
@@ -35,6 +37,7 @@ public class ReissueController {
         if(cookies != null){
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("refresh")) {
+                    log.info("Refresh cookie found");
                     refresh = cookie.getValue();
                 }
             }
@@ -72,6 +75,8 @@ public class ReissueController {
         //make new JWT
         String newAccess = jwtUtil.createJwt("access", username, role, 600000L);
         String newRefresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
+
+        log.info("New refresh: " + newRefresh + " access: " + newAccess);
 
         //Refresh 토큰 저장 DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
         refreshRepository.deleteByRefresh(refresh);

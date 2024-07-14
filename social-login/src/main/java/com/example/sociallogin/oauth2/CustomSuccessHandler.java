@@ -8,6 +8,9 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -19,6 +22,7 @@ import java.util.Date;
 import java.util.Iterator;
 
 @Component
+@Slf4j
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JWTUtil jwtUtil;
@@ -42,19 +46,21 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String access = jwtUtil.createJwt("access", uniqueId, role, 600000L);
-        String refresh = jwtUtil.createJwt("refresh", uniqueId, role, 86400000L);
+        String access = jwtUtil.createJwt("access", uniqueId, role, 600000L); //10분
+        String refresh = jwtUtil.createJwt("refresh", uniqueId, role, 86400000L); //24시간
 
         addRefreshEntity(uniqueId, refresh, 86400000L);
 
+        log.info("access: {} refresh: {}", access, refresh);
+
         response.setHeader("access", access);
         response.addCookie(createCookie("refresh", refresh));
-        response.sendRedirect("http://localhost:3000/");
+        response.sendRedirect("http://localhost:3000");
     }
 
     private void addRefreshEntity(String uniqueId, String refresh, Long expiredMs) {
 
-        //중복 저장 x 구현해야함
+        //중복 저장 안되게  구현해야함
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
         RefreshEntity refreshEntity = new RefreshEntity();

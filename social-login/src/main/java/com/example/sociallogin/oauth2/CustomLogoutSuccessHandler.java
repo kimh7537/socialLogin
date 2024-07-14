@@ -15,7 +15,7 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        Cookie cookie = new Cookie("Authorization", null);
+        Cookie cookie = new Cookie("refresh", null);
         cookie.setMaxAge(0);  // 쿠키 삭제
         cookie.setPath("/");  // 모든 경로에서 적용
         response.addCookie(cookie);

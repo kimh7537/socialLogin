@@ -47,6 +47,7 @@ public class SecurityConfig {
                 );
         http
                 .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/v1/api/email/**").permitAll()
                         .requestMatchers("/").permitAll()
                         .requestMatchers("my").hasRole(Role.USER.name())
                         .requestMatchers("/reissue").permitAll()

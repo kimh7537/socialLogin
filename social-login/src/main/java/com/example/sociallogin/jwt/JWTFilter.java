@@ -9,6 +9,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @RequiredArgsConstructor
+@Slf4j
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
@@ -40,6 +42,7 @@ public class JWTFilter extends OncePerRequestFilter {
         // 토큰이 없다면 다음 필터로 넘김
         if (token == null) {
             filterChain.doFilter(request, response);
+            log.info("not access token in authrization");
             return;
         }
 
@@ -48,6 +51,7 @@ public class JWTFilter extends OncePerRequestFilter {
             jwtUtil.isExpired(token);
         } catch (ExpiredJwtException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            log.info("token expiration in authorization");
 //            filterChain.doFilter(request, response);
             return;
         }
